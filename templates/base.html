@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/style.css') }}">
+    <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+    <style>
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: black;
+            color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            left: -100%;  /* Ajuste de la posición izquierda */
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropbtn {
+            background-color: #FF0000;
+            color: #FFFFFF;
+            border: none;
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .dropbtn:hover {
+            background-color: #FF3333;
+        }
+
+        .dropdown-content a {
+            color: white;
+            padding: 10px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #FF3333;
+        }
+    </style>
+</head>
+<body class="bg-black text-gray-100">
+    <nav class="flex justify-between items-center py-3 px-4 fixed w-full z-50">
+        <div class="w-6/12">
+            <a href="{{ url_for('home') }}" class="inline-block">
+                <img src="{{ url_for('static', filename='assets/netflix.png') }}" alt="logo" class="w-3/12 md:w-2/12" style="pointer-events: none;">
+            </a>
+        </div>
+
+
+        <div>
+            {% if current_user.is_authenticated %}
+                <div class="dropdown">
+                    <button class="dropbtn">{{ current_user.username }}</button>
+                    <div class="dropdown-content">
+                        {% if current_profile %}
+                            <a href="{{ url_for('profile_list') }}">Lista de perfiles</a>
+                        {% endif %}
+                        <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+                    </div>
+                </div>
+            {% endif %}
+            {% block back_button %}
+                <a href="javascript:history.back()" class="flex items-center bg-red py-1 px-3 rounded-md" style="background-color: black; transition: background-color 0.3s ease; width: fit-content;" onmouseover="this.style.backgroundColor='red';" onmouseout="this.style.backgroundColor='black';">
+                    <span class="ml-3 font-medium text-white">
+                        Atrás
+                    </span>
+                </a>
+            {% endblock %}
+        </div>
+    </nav>
+    {% block content %}
+
+    {% endblock %}
+</body>
+</html>
+

@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<div style="width: 400px">
+  <canvas id="grafica_24h"></canvas>
+</div>
+
+<div style="width: 400px">
+  <canvas id="grafica_semana"></canvas>
+</div>
+
+<div style="width: 400px">
+  <canvas id="grafica_mes"></canvas>
+</div>
+
+<script>
+  // Obtén los datos de las gráficas pasados desde Flask
+  const datos_24h = {{ datos_24h }};
+  const datos_semana = {{ datos_semana }};
+  const datos_mes = {{ datos_mes }};
+
+  // Crea la gráfica de tiempo abierto por 24 horas
+  new Chart(document.getElementById('grafica_24h').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: ['Tiempo abierto'],
+      datasets: [{
+        label: '24 horas',
+        data: [datos_24h],
+        backgroundColor: 'rgba(54, 162, 235, 0.5)'
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 24
+        }
+      }
+    }
+  });
+
+  // Crea la gráfica de tiempo abierto por semana
+  new Chart(document.getElementById('grafica_semana').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
+      datasets: [{
+        label: 'Semana',
+        data: datos_semana,
+        borderColor: 'rgba(255, 99, 132, 1)',
+        backgroundColor: 'rgba(255, 99, 132, 0.2)'
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 24
+        }
+      }
+    }
+  });
+
+  // Crea la gráfica de tiempo abierto por mes
+  new Chart(document.getElementById('grafica_mes').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: Array.from({ length: 30 }, (_, i) => (i + 1).toString()),
+      datasets: [{
+        label: 'Mes',
+        data: datos_mes,
+        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)'
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 24
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}

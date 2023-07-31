@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/style.css') }}">
+    <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+    <style>
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: black;
+            color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            left: -100%;  /* Ajuste de la posición izquierda */
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropbtn {
+            background-color: #FF0000;
+            color: #FFFFFF;
+            border: none;
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .dropbtn:hover {
+            background-color: #FF3333;
+        }
+
+        .dropdown-content a {
+            color: white;
+            padding: 10px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #FF3333;
+        }
+    </style>
+</head>
+
+{% block content %}
+   <div style="text-align: center;">
+    <h1>Panel de administrador</h1>
+    <h2>Estadísticas Comparativas</h2>
+    </div>
+
+
+    <h3>Últimas 24 horas</h3>
+    <canvas id="chart-24h"></canvas>
+
+    <h3>Última semana</h3>
+    <canvas id="chart-semana"></canvas>
+
+    <h3>Último mes</h3>
+    <canvas id="chart-mes"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var ctx24h = document.getElementById('chart-24h').getContext('2d');
+            var chart24h = new Chart(ctx24h, {
+                type: 'bar',
+                data: {
+                    labels: {{ labels_24h | tojson }},
+                    datasets: [{
+                        label: 'Tiempos Abiertos',
+                        data: {{ values_24h | tojson }},
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            var ctxSemana = document.getElementById('chart-semana').getContext('2d');
+            var chartSemana = new Chart(ctxSemana, {
+                type: 'bar',
+                data: {
+                    labels: {{ labels_semana | tojson }},
+                    datasets: [{
+                        label: 'Tiempos Abiertos',
+                        data: {{ values_semana | tojson }},
+                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            var ctxMes = document.getElementById('chart-mes').getContext('2d');
+            var chartMes = new Chart(ctxMes, {
+                type: 'bar',
+                data: {
+                    labels: {{ labels_mes | tojson }},
+                    datasets: [{
+                        label: 'Tiempos Abiertos',
+                        data: {{ values_mes | tojson }},
+                        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

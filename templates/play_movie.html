@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <style>
+    .play-movies {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+    }
+
+    .play-movies video {
+      width: 50%;
+      height: auto;
+      max-height: 85vh;
+    }
+
+    .vjs-big-play-button {
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+    }
+
+    .vjs-control-bar {
+      width: 25% !important;
+      max-width: 40%;
+      margin: 50px auto;
+      bottom: 50px; /* Ajusta el valor para subir o bajar la barra de control */
+      left: calc(50% - 8cm); /* Ajusta el valor para mover la barra de control de derecha a izquierda */
+      right: auto;
+    }
+  </style>
+
+  <div class="play-movies">
+    <video id="my-video" class="video-js vjs-default-skin" controls autoplay controlsList="nodownload">
+      <source src="{{ url_for('static', filename='video.mp4') }}" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <link href="https://vjs.zencdn.net/7.15.4/video-js.css" rel="stylesheet" />
+  <script src="https://vjs.zencdn.net/7.15.4/video.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var video = videojs('my-video');
+      video.play();
+    });
+  </script>
+
+{% endblock %}
+

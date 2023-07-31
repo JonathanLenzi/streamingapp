@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <nav class="flex justify-between items-center py-3 px-4 fixed w-full z-50">
+        <div class="w-6/12">
+            <a href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='assets/netflix.png') }}" alt="logo" class="w-5/12 md:w-2/12">
+            </a>
+        </div>
+    </nav>
+    <header class="min-h-screen w-full bg-black bg-opacity-75 showcase border-gray-600 border-b-8 flex justify-center py-20 bg-no-repeat" style="background-image: url('{{ url_for('static', filename='assets/background_netflix.jpg') }}');">
+        <div class="z-10 h-full py-32 md:py-0 text-gray-100 w-6/12 flex items-center flex-col">
+           <form class="bg-black bg-opacity-70 py-8 px-4 w-8/12 rounded-md" method="POST" action="{{ url_for('admin_login') }}">
+               {{ form.csrf_token }}
+               <h1 class="text-4xl font-semibold text-center">
+                    Iniciar sesión Admin
+                </h1>
+                <div class="text-center my-4">
+                    <p id="error-message" class="text-red-500">
+                        {% if error_message %}
+                            {{ error_message }}
+                        {% endif %}
+                    </p>
+                    <p id="success-message" class="text-green-500"></p>
+                </div>
+                <div>
+                    <label class='text-lg font-medium mb-3'>
+                        Correo electrónico
+                    </label>
+                    <input class="p-2 bg-gray-200 rounded-sm text-gray-900 outline-none block w-full" type="email" name="email" id="id_email" placeholder="Correo electrónico" style="background-color: #444444 !important;" required>
+                </div>
+                <div class='my-3'>
+                    <label class='text-lg font-medium mb-3'>
+                        Contraseña
+                    </label>
+                    <input class="p-2 bg-gray-200 rounded-sm text-gray-900 outline-none block w-full" type="password" name="password" id="id_password" placeholder="Contraseña" style="background-color: #444444 !important;" required>
+                </div>
+
+                <div class="flex justify-center items-center">
+                    <button class="py-2 px-4 bg-primary_red text-gray-100 font-medium text-lg rounded-md" type="submit">
+                        Iniciar sesión
+                    </button>
+                </div>
+                <div class="text-center my-4">
+                    <p>
+                        ¿Perfil de Administrador? <a href="/signup" class="text-blue-600">Registrate aquí</a>
+                    </p>
+                </div>
+            </form>
+
+
+        </div>
+    </header>
+    <script>
+document.querySelector('form').addEventListener('submit', function(event) {
+    var email = document.getElementById("id_email").value;
+    var password = document.getElementById("id_password").value;
+    var errorMessage = document.getElementById("error-message");
+
+    // Validar si el campo de correo electrónico está vacío
+    if (email === "") {
+        errorMessage.innerHTML = "El correo es obligatorio";
+        errorMessage.style.color = "red";
+        event.preventDefault(); // Evita el envío del formulario
+        return;
+    }
+
+    // Validar si se ingresó una contraseña
+    if (password === "") {
+        errorMessage.innerHTML = "La contraseña es obligatoria";
+        errorMessage.style.color = "red";
+        event.preventDefault(); // Evita el envío del formulario
+        return;
+    }
+
+
+});
+</script>
+
+{% endblock %}

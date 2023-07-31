@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/style.css') }}">
+    <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+    <style>
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: black;
+            color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            left: -100%;  /* Ajuste de la posición izquierda */
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropbtn {
+            background-color: #FF0000;
+            color: #FFFFFF;
+            border: none;
+            cursor: pointer;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .dropbtn:hover {
+            background-color: #FF3333;
+        }
+
+        .dropdown-content a {
+            color: white;
+            padding: 10px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #FF3333;
+        }
+    </style>
+</head>
+
+{% block content %}
+    <!-- Contenido principal -->
+<main class="bg-primary_black min-h-screen w-full">
+    <section class="h-screen relative bg-no-repeat pb-8 pl-6 flex justify-end items-start bg-cover" style="background-image: url('{{ background_image }}');">
+        <div>
+            <style>
+    /* Estilos para los botones */
+    .menu-button,
+    .back-button {
+        transition: opacity 0.3s ease;
+    }
+
+    .menu-button:hover,
+    .back-button:hover {
+        opacity: 0.8;
+    }
+</style>
+
+<div class="flex justify-center">
+    <div class="fixed top-0 right-0">
+        <form action="{{ url_for('watch_movies', profile_id=current_profile.id) }}" method="GET" style="display: inline;">
+            <button type="submit" class="ml-4 text-white hover:text-gray-400 bg-transparent border-none cursor-pointer focus:outline-none menu-button" style="margin-top: 0.5cm;">
+                <span class="ml-3 font-medium text-white">
+                    Películas
+                </span>
+            </button>
+        </form>
+        <form action="{{ url_for('watch_series', profile_id=current_profile.id) }}" method="GET" style="display: inline;">
+            <button type="submit" class="ml-4 text-white hover:text-gray-400 bg-transparent border-none cursor-pointer focus:outline-none menu-button" style="margin-top: 0.5cm;">
+                <span class="ml-3 font-medium text-white">
+                    Series
+                </span>
+            </button>
+        </form>
+        <form action="{{ url_for('ver_favoritas', profile_id=current_profile.id, serie_id=0, movie_id=0) }}" method="GET" style="display: inline;">
+            <button type="submit" class="ml-4 text-white hover:text-gray-400 bg-transparent border-none cursor-pointer focus:outline-none menu-button" style="margin-top: 0.5cm;">
+                <span class="ml-3 font-medium text-white">
+                    Mi lista
+                </span>
+            </button>
+        </form>
+        <form action="{{ url_for('ver_vistas', profile_id=current_profile.id, serie_id=0, movie_id=0) }}" method="GET" style="display: inline;">
+    <button type="submit" class="ml-4 text-white hover:text-gray-400 bg-transparent border-none cursor-pointer focus:outline-none menu-button" style="margin-top: 0.5cm;">
+        <span class="ml-3 font-medium text-white">
+            Vistas
+        </span>
+    </button>
+</form>
+        <form action="{{ url_for('estadisticas', profile_id=current_profile.id, serie_id=0, movie_id=0) }}" method="GET" style="display: inline;">
+    <button type="submit" class="ml-4 text-white hover:text-gray-400 bg-transparent border-none cursor-pointer focus:outline-none menu-button" style="margin-top: 0.5cm;">
+        <span class="ml-3 font-medium text-white">
+            Estadísticas
+        </span>
+    </button>
+</form>
+<style>
+    /* Estilos para el campo de búsqueda */
+    .search-input {
+        background-color: rgba(0, 0, 0, 0.5);
+        color: gray;
+    }
+
+    .search-input:focus {
+        background-color: rgba(0, 0, 0, 0.8);
+        outline: none;
+    }
+</style>
+
+<form method="POST" action="{{ url_for('search', profile_id=current_profile.id) }}">
+    {{ search_form.csrf_token }}
+    <div class="relative">
+        {{ search_form.search_query.label }}
+        {{ search_form.search_query(class_='border border-gray-300 px-4 py-2 rounded-md w-full search-input') }}
+    </div>
+</form>
+
+
+<!-- Mostrar los resultados de búsqueda aquí -->
+<div class="mt-4">
+    {% for movie in movies %}
+        <!-- Mostrar detalles de la película -->
+    {% endfor %}
+
+    {% for serie in series %}
+        <!-- Mostrar detalles de la serie -->
+    {% endfor %}
+</div>
+
+
+</script>
+
+    </div>
+</div>
+
+<div class="flex justify-end">
+    <div class="fixed top-0 right-0">
+        <a href="javascript:history.back()" class="flex items-center bg-red py-1 px-3 rounded-md back-button" style="background-color: black; transition: background-color 0.3s ease; width: fit-content; margin-right: 0;">
+            <span class="ml-3 font-medium text-white">
+                Atrás
+            </span>
+
+        </a>
+    </div>
+</div>
+            {% for movie in top_movies %}
+                    {% if current_profile.age_limit or (not current_profile.age_limit and not movie.age_limit) %}
+                        <h2 class="text-6xl font-semibold text-white my-4">
+                            {{ movie.title }}
+                        </h2>
+                        <p class="w-11/12 md:w-5/12 font-medium text-white my-4">
+                            {{ movie.description }}
+                        </p>
+                        <div class="flex my-4">
+                            <a href="{{ url_for('play_movie', movie_id=movie.id) }}" class="flex items-center bg-white py-2 px-5 rounded-md play-button">
+                                <ion-icon name="play" class="text-2xl"></ion-icon>
+                                <span class="ml-3 font-medium">
+                                    Play
+                                </span>
+                            </a>
+                            <a href="{{ url_for('movie_detail', movie_id=movie.id) }}" class="ml-4 text-white flex items-center bg-gray-500 bg-opacity-80 py-2 px-5 rounded-md info-button" title="Más Info">
+                                <ion-icon name="information-circle-outline" class="text-2xl"></ion-icon>
+                                <span class="ml-3 font-medium">
+                                    Más Info
+                                </span>
+                            </a>
+
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <h2 class="text-6xl font-semibold text-white my-4">
+                        No hay películas disponibles
+                    </h2>
+                {% endfor %}
+        </div>
+    </section>
+</main>
+
+
+
+
+    <!-- Sección inferior -->
+    <section class="bg-primary_black min-h-screen flex justify-center py-10">
+        <div class="p-8 w-10/12 relative">
+            <h2 class="text-gray-200 text-2xl font-medium">
+                Populares en Netflix
+            </h2>
+            <div class="flex justify-center items-center min-w-full movie_list">
+                {% for movie in movies %}
+                    {% if current_profile.age_limit or (not current_profile.age_limit and not movie.age_limit) %}
+                        <div class="h-40 m-4 bg-blue-500 flex-shrink-0 rounded-md cursor-pointer w-40 movie-item">
+                            <img src="{{ movie.image }}" class="w-full h-full" alt="">
+                            <div class="movie-overlay hidden">
+                                <a href="{{ url_for('play_movie', movie_id=movie.id) }}" class="play-button">
+                                    <ion-icon name="play"></ion-icon>
+                                </a>
+                                <a href="{{ url_for('movie_detail', movie_id=movie.id) }}" class="info-button" title="Más Info">
+                                    <ion-icon name="information-circle-outline"></ion-icon>
+                                </a>
+                                <a href="{{ url_for('addMovFav',profile_id=profile_id,movie_id=movie.id ) }}" class="add-button" title="Agregar a Favoritos">
+                                    <ion-icon name="add"></ion-icon>
+                                </a>
+
+                                <a href="{{ url_for('addMovVistas', profile_id=profile_id,movie_id=movie.id) }}" class="check-button" title="Ya la he visto">
+                                    <ion-icon name="checkmark"></ion-icon>
+                                </a>
+
+                            </div>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    {% if movies|length == 0 %}
+                        <p class="text-gray-200">No hay películas disponibles</p>
+                    {% endif %}
+                {% endfor %}
+
+                <!-- Agregar aquí el código para mostrar las series -->
+                {% for serie in series %}
+                    {% if current_profile.age_limit or (not current_profile.age_limit and not serie.age_limit) %}
+                        <div class="h-40 m-4 bg-blue-500 flex-shrink-0 rounded-md cursor-pointer w-40 serie-item">
+                            <img src="{{ serie.image }}" class="w-full h-full" alt="">
+                            <div class="serie-overlay hidden">
+                                <a href="{{ url_for('play_serie', serie_id=serie.id) }}" class="play-button">
+                                    <ion-icon name="play"></ion-icon>
+                                </a>
+                                <a href="{{ url_for('serie_detail', serie_id=serie.id) }}" class="info-button" title="Más Info">
+                                    <ion-icon name="information-circle-outline"></ion-icon>
+                                </a>
+                                <a href="{{ url_for('addSerFav',profile_id=profile_id,serie_id=serie.id ) }}" class="add-button" title="Agregar a Favoritos">
+                                    <ion-icon name="add"></ion-icon>
+                                </a>
+
+                                <a href="{{ url_for('addSerVistas',profile_id=profile_id, serie_id=serie.id) }}" class="check-button" title="Ya la he visto">
+                                    <ion-icon name="checkmark"></ion-icon>
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    {% if series|length == 0 %}
+                        <p class="text-gray-200">No hay series disponibles</p>
+                    {% endif %}
+                {% endfor %}
+
+
+                <style>
+                    /* Estilos para las películas */
+                    .movie-item {
+                        position: relative;
+                        overflow: hidden;
+                    }
+
+                    .movie-item:hover .movie-overlay {
+                        opacity: 1;
+                    }
+
+                    .movie-overlay {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba(0, 0, 0, 0.5);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        opacity: 0;
+                        transition: opacity 0.3s ease;
+                    }
+
+                    .movie-overlay a {
+                        color: #fff;
+                        font-size: 24px;
+                        margin: 0 10px;
+                        text-decoration: none;
+                        transition: transform 0.3s ease;
+                    }
+
+                    .movie-overlay a:hover {
+                        transform: scale(1.2);
+                    }
+
+                    /* Estilos para las series */
+                    .serie-item {
+                        position: relative;
+                        overflow: hidden;
+                    }
+
+                    .serie-item:hover .serie-overlay {
+                        opacity: 1;
+                    }
+
+                    .serie-overlay {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba(0, 0, 0, 0.5);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        opacity: 0;
+                        transition: opacity 0.3s ease;
+                    }
+
+                    .serie-overlay a {
+                        color: #fff;
+                        font-size: 24px;
+                        margin: 0 10px;
+                        text-decoration: none;
+                        transition: transform 0.3s ease;
+                    }
+
+                    .serie-overlay a:hover {
+                        transform: scale(1.2);
+                    }
+                </style>
+            </div>
+        </div>
+    </section>
+{% endblock %}

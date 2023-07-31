@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <main class='bg-primary_black min-h-screen w-full'>
+        <section class="h-screen relative bg-no-repeat pb-8 pl-6 flex justify-end items-end bg-cover" style="background-image: url('{{ serie.image }}');">
+            <div>
+                <h2 class="text-6xl font-semibold text-white my-4" style="font-weight: bolder;">
+                    {{ serie.title }}
+                </h2>
+                <p class="w-11/12 md:w-5/12 font-medium text-white my-4">
+                    {{ serie.description }}
+                </p>
+                <div class="flex my-4">
+                    <a href="{{ url_for('play_serie', serie_id=serie.id) }}" class="flex items-center bg-red py-2 px-5 rounded-md" style="background-color: black; transition: background-color 0.3s ease; width: fit-content;" onmouseover="this.style.backgroundColor='red';" onmouseout="this.style.backgroundColor='black';">
+                        <ion-icon name="play" class="text-2xl"></ion-icon>
+                        <span class="ml-3 font-medium">
+                            Play
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </section>
+        <section class='bg-primary_black min-h-screen flex justify-center py-10'>
+            <div class="p-8 w-10/12 relative">
+                <h2 class="text-gray-200 text-3xl font-medium">
+                    Description
+                </h2>
+                <div class="flex justify-center items-center min-w-full movie_lis">
+                    <p class="text-gray-100 text-lg">
+                        {{ serie.description }}
+                    </p>
+                </div>
+            </div>
+        <div class="bg-primary_black min-h-screen flex justify-center py-10">
+            <div class="p-8 w-10/12 relative">
+                <h2 class="text-gray-200 text-3xl font-medium">
+                    Seasons
+                </h2>
+                <div class="dropdown">
+  <button class="dropdown-button">Seleccionar temporada</button>
+  <div class="dropdown-content">
+    {% for season in serie.seasons %}
+    <a href="#" onclick="showEpisodes({{ season.id }})">{{ season.number }}</a>
+    {% endfor %}
+
+  </div>
+
+  <div id="episodes-container">
+
+  </div>
+</div>
+
+<script>
+  function showEpisodes(seasonId) {
+    const episodesContainer = document.getElementById('episodes-container');
+    episodesContainer.innerHTML = '';
+
+    fetch('/season/' + seasonId + '/episodes')
+      .then(response => response.json())
+      .then(episodes => {
+        episodes.forEach(episode => {
+          const episodeContainer = document.createElement('div');
+          episodeContainer.classList.add('episode-container');
+
+          const episodeImage = document.createElement('img');
+          episodeImage.src = episode.image;
+          episodeContainer.appendChild(episodeImage);
+
+          const episodeTitle = document.createElement('h3');
+          episodeTitle.textContent = episode.title;
+          episodeContainer.appendChild(episodeTitle);
+
+          const episodeDescription = document.createElement('p');
+          episodeDescription.textContent = episode.description;
+          episodeContainer.appendChild(episodeDescription);
+
+          const episodeDuration = document.createElement('span');
+          episodeDuration.textContent = 'Duración: ' + episode.duration;
+
+          episodeContainer.appendChild(episodeDuration);
+
+          const episodePlayButton = document.createElement('button');
+          episodePlayButton.textContent = 'Reproducir';
+          episodePlayButton.addEventListener('click', function() {
+            playEpisode(episode.video);
+          });
+          episodeContainer.appendChild(episodePlayButton);
+
+          episodesContainer.appendChild(episodeContainer);
+        });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
+  function playEpisode(videoUrl) {
+  const videoPlayer = document.getElementById('play_episode');
+  const source = document.createElement('source');
+  source.setAttribute('src', videoUrl);
+  source.setAttribute('type', 'video.mp4');
+
+  videoPlayer.innerHTML = ''; // Limpiar contenido anterior
+  videoPlayer.appendChild(source);
+
+  // Reproducir el video
+  videoPlayer.play();
+}
+</script>
+
+
+
+
+
+
+</script>
+            </div>
+            </div>
+            </div>
+        </section>
+    </main>
+    <script>
+        const nav = document.querySelector('nav');
+
+        document.addEventListener("scroll", e => {
+            if (scrollY > 200) {
+                nav.classList.add('bg-gray-900');
+            } else {
+                nav.classList.remove('bg-gray-900');
+            }
+        });
+    </script>
+<style>
+{% endblock %}
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-button {
+  background-color: #f8f8f8;
+  color: #333;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s;
+}
+
+.dropdown-button:hover {
+  background-color: #eaeaea;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f8f8f8;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: #333;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.dropdown-content a:hover {
+  background-color: #eaeaea;
+}
+</style>

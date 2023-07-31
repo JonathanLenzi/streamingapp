@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+</head>
+<body class="bg-black text-gray-100">
+    <nav class="flex justify-between items-center py-3 px-4 fixed w-full z-50">
+        <div class="w-6/12">
+    <a href="{{ url_for('home') }}">
+        <img src="{{ url_for('static', filename='assets/netflix.png') }}" alt="logo" class="w-5/12 md:w-2/12">
+    </a>
+</div>
+
+
+        <div>
+            <a href="{{ url_for('login') }}" class='bg-primary_red py-1 px-3 text-white md:text-lg rounded-md'>
+    iniciar sesión
+</a>
+        </div>
+    </nav>
+
+<header class="min-h-screen bg-black bg-opacity-75 showcase border-gray-600 border-b-8 flex justify-center items-center bg-no-repeat"  style="background-image: url('{{ url_for('static', filename='assets/background_netflix.jpg') }}');">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <div class="z-10 h-full py-32 md:py-0 text-gray-100 text-center flex items-center flex-col">
+        <h1 class="font-semibold text-4xl md:text-5xl w-10/12 md:w-3/4 text-center">
+            Series, películas y más... ilimitadas
+        </h1>
+        <h3 class="text-xl md:text-xl py-5">
+            Disfruta cuando quieras. Cancela cuando quieras.
+        </h3>
+        <h4 class="text-sm md:text-lg pb-3">
+            ¿Quieres ver algo ya? Escribe tu dirección de correo para crear una suscripción a Netflix o reactivarla.
+        </h4>
+
+            <form method="POST" action="{{ url_for('signup') }}" class="w-full flex justify-center">
+    <div class="flex justify-center items-center w-11/12 md:w-10/12">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="email" name="email" placeholder="Dirección de correo" class="md:py-5 py-4 px-2 placeholder-gray-500 rounded-tl-sm rounded-bl-sm outline-none text-gray-100 bg-gray-900 bg-opacity-75 w-8/12 md:w-3/4">
+        <button type="submit" class="bg-primary_red font-medium md:font-normal md:w-1/4 flex justify-center items-center py-4 px-1 md:px-0 rounded-br-sm rounded-tr-sm md:text-2xl ml-2">
+            <span>Empezar</span>
+            <ion-icon name="chevron-forward-outline" class="text-2xl"></ion-icon>
+        </button>
+    </div>
+</form>
+  </div>
+  </div>
+        <div id="validation-messages" class="text-sm text-red-500 mt-2"></div>
+        <script>
+            const emailInput = document.getElementById('email-input');
+            const signupButton = document.getElementById('signup-button');
+            const validationMessages = document.getElementById('validation-messages');
+
+            signupButton.addEventListener('click', () => {
+              if (!emailInput.value) {
+                validationMessages.innerHTML = 'El correo es obligatorio';
+                validationMessages.style.color = 'red';
+              } else if (!isValidEmail(emailInput.value)) {
+                validationMessages.innerHTML = 'El correo es inválido';
+                validationMessages.style.color = 'red';
+              } else {
+                validationMessages.innerHTML = 'Correo correcto';
+                validationMessages.style.color = 'green';
+                window.location.href = '/signup';
+
+              }
+            });
+
+            function isValidEmail(email) {
+              return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+        </script>
+    </div>
+</header>
+
+<section class='flex flex-col md:flex-row items-center border-gray-900 border-b-8' style="min-height: 70vh;">
+    <div class="md:w-1/2 flex flex-col justify-center text-center md:text-left p-5 md:p-10 ">
+        <h2 class="md:text-5xl text-4xl font-semibold mb-4">
+            Disfruta en tu tele.
+        </h2>
+        <h5 class="md:text-xl text-lg">
+            Disfruta en tu tele
+
+Smart TV, Playstation, Xbox, Chromecast, Apple TV, reproductores Blu-ray y muchos más.
+        </h5>
+    </div>
+    <div class='md:w-1/2 flex justify-center items-center'>
+        <img src="{{ url_for('static', filename='assets/tv.png') }}" class="w-8/12" alt="">
+    </div>
+</section>
+
+<section class='flex flex-col md:flex-row items-center border-gray-900 border-b-8' style="min-height: 70vh;">
+    <div class='md:w-1/2 flex justify-center items-center order-2'>
+        <img src="{{ url_for('static', filename='assets/mobile-0819.jpg') }}" class="w-8/12" alt="">
+    </div>
+
+    <div class="md:w-1/2 flex flex-col justify-center text-center md:text-left p-5 md:p-10">
+        <h2 class="md:text-5xl text-4xl font-semibold mb-4">
+            Descarga tus shows</h2>
+        <h5 class="md:text-xl text-lg">
+            Descárgate tus favoritas para verlas sin conexión.
+        </h5>
+    </div>
+</section>
+
+
+
+<section class='flex flex-col md:flex-row items-center border-gray-900 border-b-8' style="min-height: 70vh;">
+    <div class="md:w-1/2 flex flex-col justify-center text-center md:text-left p-5 md:p-10">
+        <h2 class="md:text-5xl text-4xl font-semibold mb-4">
+            Crea perfiles infantiles.
+        </h2>
+        <h5 class="md:text-xl text-lg">
+            Deja que los niños vivan aventuras con sus personajes favoritos en un espacio diseñado exclusivamente para ellos, gratis con tu suscripción.
+        </h5>
+    </div>
+    <div class='md:w-1/2 flex justify-center items-center'>
+        <img src="{{ url_for('static', filename='assets/netflix_kid.png') }}" class="w-8/12" alt="">
+    </div>
+</section>
+
+<footer class="bg-gray-900 py-10 flex justify-center text-gray-200">
+    <div class="flex flex-col justify-center text-center md:text-left">
+        <p class="font-bold text-2xl pb-4">
+            ¿Quieres ver algo ya? Escribe tu dirección de correo para crear una suscripción a Netflix o reactivarla.
+        </p>
+        <div class="w-full flex justify-center">
+            <div class="flex justify-center items-center w-11/12 md:w-10/12">
+                <input type="email" name="" id="" placeholder="Dirección de correo" class="md:py-5 py-4 px-2 placeholder-gray-500 rounded-tl-sm rounded-bl-sm outline-none text-gray-100 bg-gray-900 bg-opacity-75 block w-8/12 md:w-3/4 !important;">
+                <button class="bg-primary_red font-medium md:font-normal md:w-1/4 flex justify-center items-center py-4 px-1 md:px-0 rounded-br-sm rounded-tr-sm md:text-2xl">
+                    <span>
+                        Empezar
+                    </span>
+                    <ion-icon name="chevron-forward-outline" class="text-2xl"></ion-icon>
+                </button>
+            </div>
+        </div>
+        <p class="pt-5">
+            Tú puedes además <a href="#">crear una cuenta</a> o <a href="#">reactivar tu membresía</a>.
+        </p>
+    </div>
+</footer>

@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <section class='bg-primary_black min-h-screen py-20 md:py-0 flex-col flex justify-center items-center' style="background-image: url('{{ url_for('static', filename='assets/background_netflix.jpg') }}');">
+        <h2 class="text-center font-medium text-5xl my-4 text-gray-100">
+            ¿Quién está viendo?
+        </h2>
+
+        <div class="flex flex-wrap justify-center items-center w-10/12 md:w-6/12">
+            {% if profiles %}
+                {% for profile in profiles %}
+                    {% if profile %}
+                        <a href="{{ url_for('all_list', profile_id=profile.id) }}" class="cursor-pointer">
+                            <div class="w-32 h-32 m-4 bg-blue-500 rounded-md cursor-pointer justify-center items-center flex-col flex profile-item">
+                                {% if profile.age_limit is defined %}
+                                    {% if profile.age_limit %}
+                                        <img src="{{ url_for('static', filename='assets/avatar_all.jpg') }}" class="w-full h-full" alt="All">
+                                    {% else %}
+                                        <img src="{{ url_for('static', filename='assets/avatar_kid.jpg') }}" class="w-full h-full" alt="Kids">
+                                    {% endif %}
+                                {% else %}
+                                    <img src="{{ url_for('static', filename='assets/avatar_all.jpg') }}" class="w-full h-full" alt="All">
+                                {% endif %}
+                                <div class="profile-overlay hidden">
+                                    <div class="profile-icons flex justify-center items-center">
+                                        <a href="{{ url_for('all_list', profile_id=profile.id) }}" class="profile-action play-button">
+                                            <ion-icon name="play" class="text-white text-2xl"></ion-icon>
+                                        </a>
+                                        <a href="{{ url_for('profile_delete', profile_id=profile.id) }}" class="profile-action delete-button" title="Eliminar Perfil">
+                                            <ion-icon name="trash-bin-outline" class="text-white text-2xl"></ion-icon>
+                                        </a>
+                                    </div>
+                                    <div class="profile-name text-white text-center mt-2">{{ profile.name }}</div>
+                                </div>
+
+                            </div>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+        <style>
+    .transparent-button {
+        background-color: rgba(0, 0, 0, 0.25);
+        color: #ffffff;
+        transition: background-color 0.3s;
+    }
+
+    .transparent-button:hover {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+</style>
+
+<div class="flex justify-center items-center">
+    <a href="{{ url_for('profile_create') }}" class="px-4 py-2 rounded-md transparent-button">
+        Agregar un nuevo perfil
+    </a>
+</div>
+
+
+    </section>
+
+    <style>
+        .profile-item {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-item img {
+            transition: filter 0.3s ease;
+        }
+
+        .profile-item:hover img {
+            filter: brightness(0.7);
+        }
+
+        .profile-item:hover .profile-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .profile-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0);
+            transition: background-color 0.3s ease;
+        }
+
+        .profile-overlay .profile-action {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.7);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .profile-overlay .play-button {
+            position: absolute;
+            left: 10px;
+        }
+
+        .profile-overlay .delete-button {
+            position: absolute;
+            right: 10px;
+        }
+
+        .profile-item:hover .profile-overlay .profile-action {
+            opacity: 1;
+        }
+
+        .profile-name {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+    </style>
+
+<script>
+        const profileItems = document.querySelectorAll('.profile-item');
+
+        profileItems.forEach(item => {
+            item.addEventListener('mouseover', () => {
+                const overlay = item.querySelector('.profile-overlay');
+                overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            });
+
+            item.addEventListener('mouseout', () => {
+                const overlay = item.querySelector('.profile-overlay');
+                overlay.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+            });
+        });
+    </script>
+{% endblock %}
+
+

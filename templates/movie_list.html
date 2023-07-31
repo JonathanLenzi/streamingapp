@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- Contenido principal -->
+    <main class="bg-primary_black min-h-screen w-full">
+    <!-- Sección superior -->
+    <section class="h-screen relative bg-no-repeat pb-8 pl-6 flex justify-end items-end bg-cover" style="background-image: url('{{ background_image }}');">
+        <div>
+            {% for movie in top_movies %}
+                {% if current_profile.age_limit or (not current_profile.age_limit and not movie.age_limit) %}
+                    <h2 class="text-6xl font-semibold text-white my-4">
+                        {{ movie.title }}
+                    </h2>
+                    <p class="w-11/12 md:w-5/12 font-medium text-white my-4">
+                        {{ movie.description }}
+                    </p>
+                    <div class="flex my-4">
+                        <a href="{{ url_for('play_movie', movie_id=movie.id) }}" class="flex items-center bg-white py-2 px-5 rounded-md play-button">
+                            <ion-icon name="play" class="text-2xl"></ion-icon>
+                            <span class="ml-3 font-medium">
+                                Play
+                            </span>
+                        </a>
+                        <a href="{{ url_for('movie_detail', movie_id=movie.id) }}" class="ml-4 text-white flex items-center bg-gray-500 bg-opacity-80 py-2 px-5 rounded-md info-button" title="Más Info">
+                            <ion-icon name="information-circle-outline" class="text-2xl"></ion-icon>
+                            <span class="ml-3 font-medium">
+                                Más Info
+                            </span>
+                        </a>
+                    </div>
+                {% endif %}
+            {% else %}
+                <h2 class="text-6xl font-semibold text-white my-4">
+                    No hay películas disponibles
+                </h2>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Sección inferior -->
+    <section class="bg-primary_black min-h-screen flex justify-center py-10">
+        <div class="p-8 w-10/12 relative">
+            <h2 class="text-gray-200 text-2xl font-medium">
+                Populares en Netflix
+            </h2>
+            <div class="flex justify-center items-center min-w-full movie_list">
+                {% for movie in movies %}
+                    {% if current_profile.age_limit or (not current_profile.age_limit and not movie.age_limit) %}
+                        <div class="h-40 m-4 bg-blue-500 flex-shrink-0 rounded-md cursor-pointer w-40 movie-item">
+                            <img src="{{ movie.image }}" class="w-full h-full" alt="">
+                            <div class="movie-overlay hidden">
+                                <a href="{{ url_for('play_movie', movie_id=movie.id) }}" class="play-button">
+                                    <ion-icon name="play"></ion-icon>
+                                </a>
+                                <a href="{{ url_for('movie_detail', movie_id=movie.id) }}" class="info-button" title="Más Info">
+                                    <ion-icon name="information-circle-outline"></ion-icon>
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <p class="text-gray-200">No hay películas disponibles</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</main>
+
+    <style>
+        .movie-item {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .movie-item:hover .movie-overlay {
+            opacity: 1;
+          }
+
+        .movie-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .movie-overlay a {
+            color: #fff;
+            font-size: 24px;
+            margin: 0 10px;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .movie-overlay a:hover {
+            transform: scale(1.2);
+        }
+    </style>
+{% endblock %}
+
